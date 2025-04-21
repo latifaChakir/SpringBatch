@@ -30,7 +30,7 @@ public class ScheduledJobRunner {
         this.importCsvJob = importCsvJob;
     }
 
-    @Scheduled(cron = "0 */5 * * * *")
+    @Scheduled(cron = "0 */5 * * * *") // CHAQUE 5 minutes
     public void runJob() throws Exception {
         JobParameters jobParameters = new JobParametersBuilder()
                 .addString("run.id", UUID.randomUUID().toString())
