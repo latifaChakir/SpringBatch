@@ -1,6 +1,7 @@
 package com.example.batchimport.config;
 
 import com.example.batchimport.entity.Person;
+import com.example.batchimport.repository.PersonRepository;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -15,6 +16,7 @@ import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilder;
 import org.springframework.batch.item.file.FlatFileItemReader;
+import org.springframework.batch.item.file.LineMapper;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -95,10 +97,11 @@ public class BatchConfig {
 
     @Bean(name = "csvFileReader")
     @StepScope
-    public FlatFileItemReader<Person> readerFile(@Value("#{jobParameters['fileName']}") String fileName) {
+    public FlatFileItemReader<Person> readerFile(@Value("#{jobParameters['fileName']}") String fileName, PersonRepository personRepository) {
         FlatFileItemReader<Person> reader = new FlatFileItemReader<>();
         reader.setResource(new FileSystemResource("src/main/resources/" + fileName));
         reader.setLinesToSkip(1);
+        reader.setLineMapper(lineMapper());
         return reader;
     }
 
